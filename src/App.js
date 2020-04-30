@@ -4,12 +4,34 @@ import './App.css';
 import HomePage from "./pages/hompage/homepage.components";
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
-import SignInOut from './pages/sign-in-up/Sign-in-up.components'
+import SignInOut from './pages/sign-in-up/Sign-in-up.components';
+import {auth} from './firebase/firebase.utils';
 
-function App() {
-  return (
+class App extends React.Component{
+constructor(){
+  super();
+
+  this.state = {
+    currentUser: null
+  }
+}
+
+  unsubscribeFromAuth = null;
+
+  conponentDidMount(){
+    auth.onAuthStateChanged(user => {
+      this.stateState({currentUser: user})
+    })
+  }
+
+  componentWillUnmount(){
+    this.unsubscribeFromAuth();
+  }
+
+  render(){  
+    return (
     <div>
-      <Header/>
+      <Header currentUser={this.state.currentUser}/>
       <Switch>
         <Route exact={true} path='/' component={HomePage}/>
         <Route exact={true} path='/shop' component={ShopPage}/>
@@ -18,6 +40,8 @@ function App() {
         
     </div>
   );
+}
+
 }
 
 export default App;
